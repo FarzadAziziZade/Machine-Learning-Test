@@ -19,12 +19,13 @@ y = data.get(["o5", "o6"])
 #-------------------------------------------------------
 # initialising the Scaler
 scaler = MinMaxScaler()
+scaler2 = MinMaxScaler()
 #scaler = minmax_scale()
 #scaler = StandardScaler()
 #scaler=Normalizer() # it is the best one, but it does not have inverse
 # learning the statistical parameters for each of the data and transforming
 X = scaler.fit_transform(X)
-y = scaler.fit_transform(y)
+y = scaler2.fit_transform(y)
 #-------------------------------------------------------
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle = True)
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, shuffle = True)
@@ -67,8 +68,8 @@ val_loss = history.history['val_loss'] ### YOUR CODE HERE
 #-------------------------------------------------------
 #predicted = np.array(model.predict(X)) # Unccomment when you use normalizer
 #y_testtrue= np.array(y)  # Unccomment when you use normalizer
-predicted = np.array(scaler.inverse_transform(model.predict(X))) # Comment when you use normalizer
-y_testtrue= np.array(scaler.inverse_transform(y)) # Comment when you use normalizer
+predicted = np.array(scaler2.inverse_transform(model.predict(X))) # Comment when you use normalizer
+y_testtrue= np.array(scaler2.inverse_transform(y)) # Comment when you use normalizer
 Number = range(len(y))
 #-------------------------------------------------------
 epochs = range(len(acc))
