@@ -1,10 +1,10 @@
-% Farzad Azizi Zade
 close all
 clear all
 clc
 a=[]; inputs=[]; targetfourthroot=[]; x=[]; t=[]; y=[];
 a=csvread('datain.csv');
 % set mods -----------------------------
+loopmode=false; % False= Run the code only once % True= Run the code multiple times
 nubmerOfOutputs=2; % 1,2,3
 numberOfHiddenLayers=1; % 1 or 2
 %---------------------------------------
@@ -71,14 +71,15 @@ t = targetfourthroot;
 %     trainbu   - Unsupervised batch training with weight & bias learning rules.
 %     trainru   - Unsupervised random order weight/bias training.
 %---------------------------------------------------------------
-trainFcn = 'trainbr';
 % Create a Fitting Network
 if numberOfHiddenLayers==2
-    hiddenLayer1Size = 6;
-    hiddenLayer2Size = 6;
+    trainFcn = 'trainlm';
+    hiddenLayer1Size = 4;
+    hiddenLayer2Size = 8;
     net = fitnet([hiddenLayer1Size hiddenLayer2Size],trainFcn);
 end
 if numberOfHiddenLayers==1
+    trainFcn = 'trainbr';
     hiddenLayer1Size = 8;
     net = fitnet(hiddenLayer1Size,trainFcn);
 end
@@ -110,6 +111,7 @@ net.input.processFcns = {'mapminmax'};
 net.output.processFcns = {'mapminmax'};
 %net.input.processFcns = {'removeconstantrows','mapminmax'};
 %net.output.processFcns = {'removeconstantrows','mapminmax'};
+if loopmode==true
 if nubmerOfOutputs==3
     e=[100;100;100];
     testparameter=max(abs(e(3,:)));
@@ -120,8 +122,8 @@ elseif nubmerOfOutputs==2
     e=[100;100];
     testparameter=max(abs(e(2,:)));
     testparameter2=max(abs(e(1,:)));
-    maxx=6.1;
-    maxxx=1.2;
+    maxx=6.5;
+    maxxx=1.5;
 elseif nubmerOfOutputs==1;
     e=100;
     testparameter=max(abs(e));
@@ -164,6 +166,32 @@ e = gsubtract(t,y);
     elseif nubmerOfOutputs==1;
     testparameter=max(abs(e))
     end
+end
+else
+% Setup Division of Data for Training, Validation, Testing
+% For a list of all data division functions type: help nndivision
+net.divideFcn = 'dividerand';  % Divide data randomly
+net.divideMode = 'sample';  % Divide up every sample
+net.divideParam.trainRatio = 60/100;
+net.divideParam.valRatio = 20/100;
+net.divideParam.testRatio = 20/100;
+if trainFcn == 'trainbr'
+   net.divideParam.trainRatio = 80/100;
+   net.divideParam.valRatio = 0/100;
+   net.divideParam.testRatio = 20/100;
+end
+% Choose a Performance Function
+% For a list of all performance functions type: help nnperformance
+net.performFcn = 'mse';  % Mean Squared Error
+% Choose Plot Functions
+% For a list of all plot functions type: help nnplot
+net.plotFcns = {'plotperform','plottrainstate','ploterrhist','plotregression'};
+
+% Train the Network
+[net,tr] = train(net,x,t);
+% Test the Network
+y = net(x);
+e = gsubtract(t,y);
 end
 % performance = perform(net,t,y);
 % Recalculate Training, Validation and Test Performance
