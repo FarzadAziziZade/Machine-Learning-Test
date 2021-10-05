@@ -52,7 +52,13 @@ history = model.fit(  X_train,
             y_train, 
             epochs=300,
             validation_data=(X_val, y_val),
-            verbose=1)
+            verbose=2)
+#By setting verbose 0, 1 or 2 you just say how do you want to 'see' the training progress for each epoch.
+#verbose=0 will show you nothing (silent)
+#verbose=1 will show you an animated progress bar like this:
+# progres_bar [==========================================]
+#verbose=2 will just mention the number of epoch like this:
+# Epoch 1/300
 #-------------------------------------------------------
 model.evaluate(X_test, y_test, verbose=1)
 #-------------------------------------------------------
