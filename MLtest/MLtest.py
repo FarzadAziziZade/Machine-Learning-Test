@@ -39,9 +39,9 @@ print(y_val)
 import tensorflow as tf
 #-------------------------------------------------------
 model = tf.keras.models.Sequential([                 
-    tf.keras.layers.Dense(4, activation='tanh', input_dim = 4, name="Dense_1"),
-    tf.keras.layers.Dense(8, activation='tanh', name="Dense_2"),
-    tf.keras.layers.Dense(2, activation='tanh', name="Output")
+    tf.keras.layers.Dense(4, activation='relu', input_dim = 4, name="Dense_1"),
+    tf.keras.layers.Dense(8, activation='relu', name="Dense_2"),
+    tf.keras.layers.Dense(2, activation='relu', name="Output")
 ], name="Model_1")
 model.compile(  optimizer='RMSprop', 
                 loss='mean_squared_error', 
@@ -50,7 +50,7 @@ model.compile(  optimizer='RMSprop',
 #-------------------------------------------------------
 history = model.fit(  X_train, 
             y_train, 
-            epochs=1000,
+            epochs=300,
             validation_data=(X_val, y_val),
             verbose=1)
 #-------------------------------------------------------
