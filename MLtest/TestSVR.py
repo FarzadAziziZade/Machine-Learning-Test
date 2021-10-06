@@ -19,6 +19,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle
 X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, shuffle = True)
 #-------------------------------------------------------
 rng = np.random.RandomState(0)
+# kernel{‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’}, default=’rbf’
 regr = make_pipeline(StandardScaler(), SVR(kernel='poly', degree=21,C=1, epsilon=0.1))
 #regr = make_pipeline(StandardScaler(), SVR(kernel='sigmoid',C=1, epsilon=0.1))
 #regr = make_pipeline(StandardScaler(), SVR(C=1, epsilon=0.1))
