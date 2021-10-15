@@ -14,9 +14,9 @@ y = data.get(["o7"])
 #3 Feature Scaling
 from sklearn.preprocessing import StandardScaler
 sc_X = StandardScaler()
-sc_y = StandardScaler()
+scaler = StandardScaler()
 X = sc_X.fit_transform(X)
-y = sc_y.fit_transform(y)
+y = scaler.fit_transform(y)
 
 #4 Fitting the Support Vector Regression Model to the dataset
 # Create your support vector regressor here
@@ -34,7 +34,7 @@ from sklearn.linear_model import Ridge
 # define model
 model = Ridge(alpha=1.0)
 # define model evaluation method
-cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=1)
+cv = RepeatedKFold(n_splits=10, n_repeats=10, random_state=1)
 # evaluate model
 #scores = cross_val_score(model, X, y, scoring='neg_mean_absolute_error', cv=cv, n_jobs=-1)
 scores = cross_val_score(model, X, y, cv=cv, n_jobs=-1)
@@ -69,13 +69,13 @@ print('Config: %s' % results.best_params_)
 model.fit(X,y)
 #-------------------------------------------------------
 import matplotlib.pyplot as plt
-predicted = model.predict(X)
-y_testtrue= y
+predicted = np.array(scaler.inverse_transform(model.predict(X)))
+y_testtrue= np.array(scaler.inverse_transform(y))
 Number = range(len(y))
 #-------------------------------------------------------
 plt.figure()
 plt.plot(Number, predicted, 'r', label='Predicted')
-plt.plot(Number, y_testtrue, 'b', label='Real Data')
+plt.plot(Number, y_testtrue,'x-', label='Real Data')
 plt.title('Efficiency')
 plt.legend()
 #-------------------------------------------------------

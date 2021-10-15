@@ -12,30 +12,30 @@ data = pd.read_csv('{file_name}.csv'.format(file_name = csv_file_name), names=he
 X = data.get(["f1", "f2", "f3", "f4"])
 y = data.get(["o7"])
 scaler = StandardScaler()
-X = scaler.fit_transform(X)
+scaler1 = StandardScaler()
+X = scaler1.fit_transform(X)
 y = scaler.fit_transform(y)
 #-------------------------------------------------------
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle = True)
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, shuffle = True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, shuffle = True)
 #-------------------------------------------------------
 rng = np.random.RandomState(0)
 # kernel{‘linear’, ‘poly’, ‘rbf’, ‘sigmoid’, ‘precomputed’}, default=’rbf’
-regr = make_pipeline(StandardScaler(), SVR(kernel='poly', degree=21,C=1, epsilon=0.1))
+regr = make_pipeline(StandardScaler(), SVR(kernel='linear',C=1, epsilon=0.1))
 #regr = make_pipeline(StandardScaler(), SVR(kernel='sigmoid',C=1, epsilon=0.1))
 #regr = make_pipeline(StandardScaler(), SVR(C=1, epsilon=0.1))
 #-------------------------------------------------------
-regr.fit(X, y)
+regr.fit(X_train, y_train)
 #-------------------------------------------------------
-print(regr.score(X, y, sample_weight=None))
+print(regr.score(X_test, y_test, sample_weight=None))
 #-------------------------------------------------------
 import matplotlib.pyplot as plt
-predicted = regr.predict(X)
-y_testtrue= y
+predicted = np.array(scaler.inverse_transform(regr.predict(X)))
+y_testtrue= np.array(scaler.inverse_transform(y))
 Number = range(len(y))
 #-------------------------------------------------------
 plt.figure()
 plt.plot(Number, predicted, 'r', label='Predicted')
-plt.plot(Number, y_testtrue, 'b', label='Real Data')
+plt.plot(Number, y_testtrue,'x-', label='Real Data')
 plt.title('Efficiency')
 plt.legend()
 #-------------------------------------------------------

@@ -15,9 +15,9 @@ y = data.get(["o7"])
 
 #Feature Scaling
 sc_X = StandardScaler()
-sc_y = StandardScaler()
+scaler = StandardScaler()
 X = sc_X.fit_transform(X)
-y = sc_y.fit_transform(y)
+y = scaler.fit_transform(y)
 
 #fit model
 model = Ridge(alpha=0.99)
@@ -28,13 +28,13 @@ print(model.score(X, y))
 #plot
 #-------------------------------------------------------
 import matplotlib.pyplot as plt
-predicted = model.predict(X)
-y_testtrue= y
+predicted = np.array(scaler.inverse_transform(model.predict(X)))
+y_testtrue= np.array(scaler.inverse_transform(y))
 Number = range(len(y))
 #-------------------------------------------------------
 plt.figure()
 plt.plot(Number, predicted, 'r', label='Predicted')
-plt.plot(Number, y_testtrue, 'b', label='Real Data')
+plt.plot(Number, y_testtrue,'x-', label='Real Data')
 plt.title('Efficiency')
 plt.legend()
 #-------------------------------------------------------
